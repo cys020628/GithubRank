@@ -11,7 +11,7 @@ fun GithubSearchReposItems.toModel(): GithubRepoModel {
         id = this.id,
         name = this.name,
         fullName = this.fullName,
-        owner = this.owner.toModel(), // 소유자 정보 변환
+        owner = this.owner.toModel(),
         description = this.description,
         stars = this.stargazersCount,
         forks = this.forksCount,
@@ -21,7 +21,6 @@ fun GithubSearchReposItems.toModel(): GithubRepoModel {
     )
 }
 
-// ✅ 소유자 변환 함수
 fun GithubSearchReposOwner.toModel(): GithubOwnerModel {
     return GithubOwnerModel(
         username = this.username,

@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.webtoon.githubranking.presentation.common.BottomNavigationBar
 
 @Composable
 fun NavScreen() {
@@ -28,7 +27,7 @@ fun NavScreen() {
                         thickness = 0.7.dp,
                         color = Color.LightGray,
                     )
-                    BottomNavigationBar(navController)
+                    //BottomNavigationBar(navController)
                 }
             }
         }

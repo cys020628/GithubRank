@@ -15,6 +15,6 @@ interface SearchGithubRepositoryApi {
         @Query("sort") sort:String,
         // 올림차순 내림차순
         @Query("order") order:String = "desc",
-        @Query("per_page") perPage:Int = 200
+        @Query("per_page") perPage:Int = 100
     ):GithubSearchReposResponse
 }

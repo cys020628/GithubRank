@@ -25,7 +25,7 @@ class GithubRepoListRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false,
-                maxSize = 200
+                maxSize = 100
             ),
             pagingSourceFactory = {
                 GithubReposPagingSource(

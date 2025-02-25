@@ -57,7 +57,7 @@ fun HomeScreen(
                 .padding(paddingValues)
         ) {
             Text(
-                text = "GitHub Top 200",
+                text = "GitHub Top 100",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp)
@@ -91,9 +91,8 @@ fun GithubRepoItem(rank: Int, repo: GithubRepoModel) {
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically // ✅ Row 내부 요소 세로 중앙 정렬
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // ✅ 등수 텍스트 추가 (세로 중앙 정렬 적용)
             Text(
                 text = "${rank}위",
                 fontSize = 20.sp,
@@ -101,10 +100,9 @@ fun GithubRepoItem(rank: Int, repo: GithubRepoModel) {
                 color = Color.Black,
                 modifier = Modifier
                     .padding(end = 12.dp)
-                    .align(Alignment.CenterVertically) // ✅ 세로 중앙 정렬
+                    .align(Alignment.CenterVertically)
             )
 
-            // 리포지토리 소유자 프로필 이미지
             AsyncImage(
                 model = repo.owner.avatarUrl,
                 contentDescription = "Owner Avatar",
