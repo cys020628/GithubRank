@@ -40,6 +40,15 @@ fun HomeScreen(
 
     val githubRepoList = homeViewModel.githubRepo.collectAsLazyPagingItems()
 
+    /**
+     * @param LaunchedEffect Jetpack Compose에서 특정 키 값이 변경될 때 코드를 실행하는 Composable 함수
+     * @param Unit composable이 처음 composition(구성) 될떄 한번만 실행 이는 Unit 값이 절대 변하지 않기 때문 같은 이유로 Unit이 아닌 true도 가능
+     * ex)
+     * LaunchedEffect(userId)	userId가 변경될 때마다 다시 실행
+     * LaunchedEffect(list.size)	list.size 값이 바뀔 때마다 실행
+     * LaunchedEffect(state.value)	state.value가 변경될 때마다 실행
+     * LaunchedEffect(navBackStackEntry)	네비게이션 상태가 변경될 때마다 실행
+     */
     LaunchedEffect(Unit) {
         // 하트가 제일 많은 순으로 업데이트
         homeViewModel.getGithubRepoList(
@@ -65,13 +74,13 @@ fun HomeScreen(
 
             //  리스트로 데이터 표시
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp)
+                modifier = Modifier.fillMaxSize(), // 전체 화면을 차지하도록 설정
+                contentPadding = PaddingValues(16.dp) // 리스트의 전체 padding 값을 16.dp 로 설정
             ) {
                 items(githubRepoList.itemCount) { index ->
-                    val repoList = githubRepoList[index]
+                    val repoList = githubRepoList[index] // 현재 리스트의 N번째 데이터
                     if (repoList != null) {
-                        GithubRepoItem(index + 1,repoList) //  개별 항목 UI
+                        GithubRepoItem(index + 1,repoList)  // repoList가 null 아닐때만 GithubRepoItem을 렌더링
                     }
                 }
 

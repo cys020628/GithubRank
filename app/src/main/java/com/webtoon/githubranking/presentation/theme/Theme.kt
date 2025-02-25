@@ -38,12 +38,12 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun GithubRankingTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(), // 다크모드를 시스템 설정에 따라 자동 적용
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    dynamicColor: Boolean = true, // Android 12 이상에서 동적 컬러 적용 여부
+    content: @Composable () -> Unit // 테모 적용 후 감싸줄 UI 컨텐츠
 ) {
-    val colorScheme = when {
+    val colorScheme = when { // 앱의 색상 테마 결정하는 부분
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -53,10 +53,12 @@ fun GithubRankingTheme(
         else -> LightColorScheme
     }
 
+    // 한글 UI 가 있는 경우 비율 깨짐 방지를 위해 필수
+    // 다양한 기기에서 일관된 글꼴 크기 유지 가능 및 가독성을 일정하게 유지 가능
     CompositionLocalProvider(
         LocalDensity provides Density(
             density = LocalDensity.current.density,
-            fontScale = 1f
+            fontScale = 1f // 폰트 크기 비율을 1로 설정하여 기본 폰트 크기 유지
         )
     ) {
         MaterialTheme(
