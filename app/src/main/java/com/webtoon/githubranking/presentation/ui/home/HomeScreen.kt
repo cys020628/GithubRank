@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.webtoon.githubranking.domain.model.GithubRepoModel
+import com.webtoon.githubranking.presentation.util.formatWithComma
 
 @Composable
 fun HomeScreen(
@@ -132,7 +133,7 @@ fun GithubRepoItem(rank: Int, repo: GithubRepoModel) {
                 )
                 // 스타 개수
                 Text(
-                    text = "⭐ ${repo.stars}  🍴 ${repo.forks}",
+                    text = "⭐ ${repo.stars.formatWithComma()}  🍴 ${repo.forks.formatWithComma()}",
                     fontSize = 14.sp,
                     color = Color.Gray
                 )

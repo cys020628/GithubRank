@@ -33,8 +33,11 @@ class GithubReposPagingSource(
                 val cachedData = githubRepoDao.getAllRepos().first() // 로컬 DB에서 모든 저장소 가져오기 (Flow의 첫 번째 데이터)
                 val convertedData = cachedData.map { it.toModel() } // 엔티티 데이터를 모델 객체로 변환
 
+                // 내림차순 정렬
+                val sortedData = convertedData.sortedByDescending { it.stars }
+
                 return LoadResult.Page(
-                    data = convertedData, // 캐시 데이터 사용
+                    data = sortedData, // 캐시 데이터 사용
                     prevKey = null, // 이전 페이지 없음
                     nextKey = null // 다음 페이지 없음 (로컬 캐시는 페이징 개념이 없기 때문)
                 )
