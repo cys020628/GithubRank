@@ -2,6 +2,7 @@ package com.webtoon.githubranking.data.mapper
 
 import com.webtoon.githubranking.data.dto.GithubSearchReposItems
 import com.webtoon.githubranking.data.dto.GithubSearchReposOwner
+import com.webtoon.githubranking.data.local.db.GithubRepoEntity
 import com.webtoon.githubranking.domain.model.GithubOwnerModel
 import com.webtoon.githubranking.domain.model.GithubRepoModel
 
@@ -27,3 +28,35 @@ fun GithubSearchReposOwner.toModel(): GithubOwnerModel {
         avatarUrl = this.avatarUrl
     )
 }
+
+fun GithubSearchReposItems.toEntity(): GithubRepoEntity {
+    return GithubRepoEntity(
+        id = id,
+        name = name,
+        fullName = fullName,
+        ownerName = owner.username,
+        ownerAvatarUrl = owner.avatarUrl,
+        description = description,
+        stars = stargazersCount,
+        forks = forksCount,
+        language = language,
+        visibility = visibility,
+        url = htmlUrl
+    )
+}
+
+fun GithubRepoEntity.toModel(): GithubRepoModel {
+    return GithubRepoModel(
+        id = id,
+        name = name,
+        fullName = fullName,
+        owner = GithubOwnerModel(ownerName, ownerAvatarUrl),
+        description = description,
+        stars = stars,
+        forks = forks,
+        language = language,
+        visibility = visibility,
+        url = url
+    )
+}
+

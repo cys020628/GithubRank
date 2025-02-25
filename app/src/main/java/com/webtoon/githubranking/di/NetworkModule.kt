@@ -19,7 +19,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun getGithubRetrofitInstance(): Retrofit {
+    fun provideGithubRetrofit(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -37,13 +37,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun getSearchGithubReposApiInstance(retrofit: Retrofit): SearchGithubRepositoryApi {
+    fun provideSearchGithubReposApi(retrofit: Retrofit): SearchGithubRepositoryApi {
         return retrofit.create(SearchGithubRepositoryApi::class.java)
     }
 
     @Singleton
     @Provides
-    fun getSearchGithubUserApiInstance(retrofit: Retrofit): SearchGithubUserApi {
+    fun provideSearchGithubUserApi(retrofit: Retrofit): SearchGithubUserApi {
         return retrofit.create(SearchGithubUserApi::class.java)
     }
 }

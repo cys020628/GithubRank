@@ -14,5 +14,5 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun githubRepoListRepository(githubRepoListRepositoryImpl: GithubRepoListRepositoryImpl): GithubRepoListRepository
+    abstract fun provideGithubRepoListRepository(githubRepoListRepositoryImpl: GithubRepoListRepositoryImpl): GithubRepoListRepository
 }

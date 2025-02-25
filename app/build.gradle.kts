@@ -30,6 +30,12 @@ android {
             "GITHUB_BASE_URL",
             "\"${properties.getProperty("GITHUB_BASE_URL")}\""
         )
+
+        buildConfigField(
+            "String",
+            "GITHUB_TOKEN",
+            "\"${properties.getProperty("GITHUB_TOKEN")}\""
+        )
     }
 
     buildTypes {

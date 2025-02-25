@@ -57,7 +57,7 @@ fun HomeScreen(
                 .padding(paddingValues)
         ) {
             Text(
-                text = "GitHub 인기 리포지토리",
+                text = "GitHub Top 200",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp)
@@ -81,7 +81,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun GithubRepoItem(rank:Int,repo: GithubRepoModel) {
+fun GithubRepoItem(rank: Int, repo: GithubRepoModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,21 +89,20 @@ fun GithubRepoItem(rank:Int,repo: GithubRepoModel) {
             .clickable { /* 클릭 시 상세 페이지 이동 가능 */ },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-
-        // 등수 텍스트 추가
-        Text(
-            text = "${rank}위",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(end = 12.dp)
-        )
-
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically // ✅ Row 내부 요소 세로 중앙 정렬
         ) {
-
+            // ✅ 등수 텍스트 추가 (세로 중앙 정렬 적용)
+            Text(
+                text = "${rank}위",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .align(Alignment.CenterVertically) // ✅ 세로 중앙 정렬
+            )
 
             // 리포지토리 소유자 프로필 이미지
             AsyncImage(
@@ -130,7 +129,7 @@ fun GithubRepoItem(rank:Int,repo: GithubRepoModel) {
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
-                // 주 프로그래밍 언어 (nullable 처리)
+                // 프로그래밍 언어 (nullable 처리)
                 repo.language?.let {
                     Text(
                         text = "🖥 Language: $it",
