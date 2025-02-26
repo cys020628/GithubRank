@@ -14,7 +14,42 @@
 ## 📌 프로젝트 소개
 GitHub의 인기 있는 리포지토리와 사용자 정보를 조회할 수 있는 Android 애플리케이션입니다. 최신 기술 스택을 활용하여 클린 아키텍처를 적용하였으며, Jetpack Compose 기반으로 개발되었습니다.
 
----
+--- 
+
+## 📂 프로젝트 구조
+
+```markdown
+githubranking/
+│── data/                         # 데이터 관련 로직 (Data Layer)
+│   ├── dto/                      # 데이터 전송 객체 (Data Transfer Object)
+│   ├── local/                    # 로컬 데이터 저장소 (Room, SharedPreferences 등)
+│   ├── mapper/                   # DTO ↔ 도메인 모델 매핑
+│   ├── paging/                    # 페이징 처리 관련 로직
+│   ├── remote/                    # 네트워크 API 관련 로직
+│   ├── repository/                # 데이터 저장소 구현 (Repository Pattern)
+│
+│── di/                            # 의존성 주입 (Dependency Injection - Hilt)
+│   ├── NetworkModule.kt          # 네트워크 관련 DI 모듈
+│   ├── PreferenceModule.kt       # SharedPreferences 관련 DI 모듈
+│   ├── RepositoryModule.kt       # Repository 관련 DI 모듈
+│   ├── RoomModule.kt             # Room Database 관련 DI 모듈
+│
+│── domain/                        # 도메인 레이어 (비즈니스 로직)
+│   ├── model/                    # 앱의 핵심 도메인 모델
+│   ├── repository/                # Repository 인터페이스 정의
+│   ├── usecase/                   # UseCase (비즈니스 로직 처리)
+│
+│── presentation/                   # UI 레이어 (Presentation Layer)
+│   ├── common/                    # 공통 UI 컴포넌트
+│   ├── theme/                     # 테마 및 스타일 관련 파일
+│   ├── ui/                        # 개별 화면 (Compose UI)
+│   ├── util/                      # UI 관련 유틸리티 함수
+│
+│── App.kt                         # 애플리케이션 클래스 (Hilt 적용)
+
+```
+
+--- 
 
 ## 🛠 기술 스택
 - **아키텍처**: Clean Architecture
