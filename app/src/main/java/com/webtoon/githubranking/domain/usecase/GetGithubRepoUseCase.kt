@@ -20,7 +20,7 @@ class GetGithubRepoUseCase @Inject constructor(
         repository.getGitHubRepo(query, sort)
             .collect { result ->
                 result.onSuccess { repoEntities ->
-                    Timber.e("리스스 개수 :  ${repoEntities.size}")
+                    Timber.e("리소스 개수 :  ${repoEntities.size}")
                     githubRepoDao.clearRepos() // 기존 데이터 삭제
                     githubRepoDao.insertRepos(repoEntities) // 새로운 데이터 저장
                     emit(Result.success<Boolean>(true)) // 저장 성공 반환

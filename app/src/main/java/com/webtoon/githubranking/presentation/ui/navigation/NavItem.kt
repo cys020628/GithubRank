@@ -38,6 +38,6 @@ sealed class BottomNavItem(
 sealed class MainNavItem(val route: String, val label: String) {
     // 스플래쉬 화면
     data object Splash : MainNavItem("splash", "스플래쉬")
-    // 웹뷰 화면
-    data object WebView:MainNavItem("webview","웹뷰")
+    // 상세화면
+    data object UserDetail : MainNavItem("userDetail","유저 디테일")
 }

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.webtoon.githubranking.presentation.ui.home.HomeScreen
 import com.webtoon.githubranking.presentation.ui.splash.SplashScreen
+import com.webtoon.githubranking.presentation.ui.userdetail.UserDetailScreen
 
 @Composable
 fun NavGraph(
@@ -23,5 +24,11 @@ fun NavGraph(
 
         // Home
         composable(BottomNavItem.Home.route) { HomeScreen(navHostController) }
+
+        // Detail
+        composable("${MainNavItem.UserDetail.route}/{userName}") {backStackEntry ->
+            val repoName = backStackEntry.arguments?.getString("userName") ?: "Unknown name"
+            UserDetailScreen(repoName,navHostController)
+        }
     }
 }

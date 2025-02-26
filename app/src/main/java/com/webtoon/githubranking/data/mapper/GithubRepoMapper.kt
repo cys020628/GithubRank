@@ -3,8 +3,8 @@ package com.webtoon.githubranking.data.mapper
 import com.webtoon.githubranking.data.dto.GithubSearchReposItems
 import com.webtoon.githubranking.data.dto.GithubSearchReposOwner
 import com.webtoon.githubranking.data.local.db.GithubRepoEntity
-import com.webtoon.githubranking.domain.model.GithubOwnerModel
 import com.webtoon.githubranking.domain.model.GithubRepoModel
+import com.webtoon.githubranking.domain.model.GithubRepoOwnerModel
 
 fun GithubSearchReposItems.toModel(): GithubRepoModel {
     return GithubRepoModel(
@@ -21,8 +21,8 @@ fun GithubSearchReposItems.toModel(): GithubRepoModel {
     )
 }
 
-fun GithubSearchReposOwner.toModel(): GithubOwnerModel {
-    return GithubOwnerModel(
+fun GithubSearchReposOwner.toModel(): GithubRepoOwnerModel {
+    return GithubRepoOwnerModel(
         username = this.username,
         avatarUrl = this.avatarUrl
     )
@@ -49,7 +49,7 @@ fun GithubRepoEntity.toModel(): GithubRepoModel {
         id = id,
         name = name,
         fullName = fullName,
-        owner = GithubOwnerModel(ownerName, ownerAvatarUrl),
+        owner = GithubRepoOwnerModel(ownerName, ownerAvatarUrl),
         description = description,
         stars = stars,
         forks = forks,

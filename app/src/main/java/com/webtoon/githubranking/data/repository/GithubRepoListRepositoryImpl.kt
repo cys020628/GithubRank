@@ -24,26 +24,29 @@ import javax.inject.Singleton
 @Singleton
 class GithubRepoListRepositoryImpl @Inject constructor(
     private val api: SearchGithubRepositoryApi,
-    private val  githubRepoDao: GithubRepoDao
+    private val githubRepoDao: GithubRepoDao
 ) : GithubRepoListRepository {
 
-    override fun getGitHubRepo(query: String, sort: String): Flow<Result<List<GithubRepoEntity>>> = flow {
-        val result = runCatching {
-            api.getPopularRepositories(
-                authorization = BuildConfig.GITHUB_TOKEN,
-                query = query,
-                sort = sort
-            )
-        }
+    override fun getGitHubRepo(query: String, sort: String): Flow<Result<List<GithubRepoEntity>>> =
+        flow {
+            val result = runCatching {
+                api.getPopularRepositories(
+                    authorization = BuildConfig.GITHUB_TOKEN,
+                    query = query,
+                    sort = sort
+                )
+            }
 
-        result.onSuccess { response ->
-            val repoEntities = response.repositories.map { it.toEntity() }
-            emit(Result.success<List<GithubRepoEntity>>(repoEntities))
-        }.onFailure { exception ->
-            Timber.e("API 호출 실패: ${exception.message}")
-            emit(Result.failure<List<GithubRepoEntity>>(exception))
-        }
-    }.flowOn(Dispatchers.IO)
+            result
+                .onSuccess { response ->
+                    val repoEntities = response.repositories.map { it.toEntity() }
+                    emit(Result.success<List<GithubRepoEntity>>(repoEntities))
+                }
+                .onFailure { exception ->
+                    Timber.e("API 호출 실패: ${exception.message}")
+                    emit(Result.failure<List<GithubRepoEntity>>(exception))
+                }
+        }.flowOn(Dispatchers.IO)
 
     override fun getPagedGithubRepos(): Flow<PagingData<GithubRepoModel>> {
         return Pager(

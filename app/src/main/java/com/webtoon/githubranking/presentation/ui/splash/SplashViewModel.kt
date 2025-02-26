@@ -53,5 +53,4 @@ class SplashViewModel @Inject constructor(
             Timber.e("하루 이상 안 지남")
         }
     }
-
 }
