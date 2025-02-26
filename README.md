@@ -80,3 +80,33 @@ android {
 GITHUB_BASE_URL = https://api.github.com/
 GITHUB_TOKEN = Bearer ${gitHub Token}
 ```
+
+## 🛠 **Trouble Shooting & 해결 과정**
+### 🚨 **GitHub API 과요청(Rate Limit 초과) 문제**
+GitHub API는 비인증 요청 시 **1시간에 60회**, 인증된 요청 시 **5,000회**의 요청 제한이 존재합니다.  
+하지만, 많은 사용자 또는 빈번한 API 호출로 인해 과요청이 발생하면 **API가 차단되는 문제**가 있었습니다.
+
+### 🏗 **해결 과정**
+1. **API 요청 횟수를 줄이기 위해 Room을 활용한 로컬 캐싱 적용**
+2. **앱 최초 실행 시 API 데이터를 가져와 Room에 저장**
+3. **이후에는 Room에서 데이터를 가져오고, 24시간마다 갱신하도록 설정**
+4. **SplashScreen에서 데이터 동기화 후 `HomeScreen`으로 이동**
+5. **GitHub API 요청 없이 Room에서 페이징 데이터를 제공**하여 불필요한 API 요청 방지
+
+---
+
+## ✅ **Trouble Shooting: API 요청 최적화 (Room 캐싱 + 24시간 갱신)**
+
+### **1️⃣ 문제 발생**
+> GitHub API 요청이 많아지면서 Rate Limit(과요청) 문제 발생  
+> → API 요청 횟수를 줄이고, 효율적으로 데이터를 캐싱해야 함.
+
+### **2️⃣ 문제 해결**
+| 해결 방법 | 적용 방식 |
+|------|------|
+| **초기 실행 시만 API에서 데이터 가져오기** | 앱 최초 실행 시 GitHub API에서 데이터를 받아 Room에 저장 |
+| **24시간마다 데이터 갱신** | `System.currentTimeMillis()`를 이용하여 24시간이 지나면 API 호출 후 Room 업데이트 |
+| **SplashScreen에서 데이터 동기화** | `fetchAndSaveRepos()`를 실행하여 Room을 최신 상태로 유지 후 `HomeScreen`으로 이동 |
+| **페이징 적용** | `Room PagingSource`를 활용하여 UI에서 데이터 페이징 처리 |
+
+---
