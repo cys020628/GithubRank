@@ -13,4 +13,12 @@ class PreferenceManager @Inject constructor(
     fun setLastUpdatedTime(time: Long) {
         sharedPreferences.edit().putLong("last_updated", time).apply()
     }
+
+    fun isFirstLaunch(): Boolean {
+        return sharedPreferences.getBoolean("is_first_launch", true)
+    }
+
+    fun setFirstLaunchDone() {
+        sharedPreferences.edit().putBoolean("is_first_launch", false).apply()
+    }
 }

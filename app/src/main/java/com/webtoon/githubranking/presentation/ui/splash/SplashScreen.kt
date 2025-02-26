@@ -21,25 +21,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.webtoon.githubranking.R
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    splashViewModel: SplashViewModel = hiltViewModel()
 ) {
-
-    val context = LocalContext.current
 
     // 애니메이션을 위한 상태 변수 설정
     var visible by remember { mutableStateOf(false) }
+
+    val loadingState by splashViewModel.loading.collectAsStateWithLifecycle()
 
     // 로고의 크기 애니메이션 (작은 크기에서 커짐)
     val scale by animateFloatAsState(
@@ -53,15 +54,26 @@ fun SplashScreen(
         animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(loadingState) { // ✅ value 값으로 감지
         visible = true
-        delay(2000)
-        navController.navigate("home") {
-            popUpTo(navController.graph.startDestinationId) {
-                inclusive = true
+        delay(2000) // ✅ 2초 후에 HomeScreen으로 이동
+        if (!loadingState) { // ✅ 로딩이 끝났다면 (loadingState == false)
+            navController.navigate("home") {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
-            launchSingleTop = true
         }
+    }
+
+
+    // ✅ Splash 화면 진입 시 데이터 다운로드 시작
+    LaunchedEffect(Unit) {
+        splashViewModel.fetchAndSaveRepos(
+            "stars:>0",
+            "stars"
+        )
     }
 
     Box(

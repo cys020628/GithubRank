@@ -3,40 +3,63 @@ package com.webtoon.githubranking.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
+import com.webtoon.githubranking.BuildConfig
 import com.webtoon.githubranking.data.local.db.GithubRepoDao
-import com.webtoon.githubranking.data.local.preferences.PreferenceManager
-import com.webtoon.githubranking.data.paging.GithubReposPagingSource
+import com.webtoon.githubranking.data.local.db.GithubRepoEntity
+import com.webtoon.githubranking.data.mapper.toEntity
+import com.webtoon.githubranking.data.mapper.toModel
 import com.webtoon.githubranking.data.remote.SearchGithubRepositoryApi
 import com.webtoon.githubranking.domain.model.GithubRepoModel
 import com.webtoon.githubranking.domain.repository.GithubRepoListRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GithubRepoListRepositoryImpl @Inject constructor(
     private val api: SearchGithubRepositoryApi,
-    private val githubRepoDao: GithubRepoDao, // ✅ Room DAO 추가
-    private val preferenceManager: PreferenceManager // ✅ SharedPreferences 추가
+    private val  githubRepoDao: GithubRepoDao
 ) : GithubRepoListRepository {
 
-    override fun getGithubRepo(query: String, sort: String): Flow<PagingData<GithubRepoModel>> {
+    override fun getGitHubRepo(query: String, sort: String): Flow<Result<List<GithubRepoEntity>>> = flow {
+        val result = runCatching {
+            api.getPopularRepositories(
+                authorization = BuildConfig.GITHUB_TOKEN,
+                query = query,
+                sort = sort
+            )
+        }
+
+        result.onSuccess { response ->
+            val repoEntities = response.repositories.map { it.toEntity() }
+            emit(Result.success<List<GithubRepoEntity>>(repoEntities))
+        }.onFailure { exception ->
+            Timber.e("API 호출 실패: ${exception.message}")
+            emit(Result.failure<List<GithubRepoEntity>>(exception))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getPagedGithubRepos(): Flow<PagingData<GithubRepoModel>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20, // 한 페이지에 로드할 아이템 개수 (20개)
-                enablePlaceholders = false,  // true이면 자리 표시자(Placeholder) 사용 가능, false이면 사용 안 함
-                maxSize = 100 // Paging 캐시에 저장할 최대 아이템 개수 (100개)
+                pageSize = 20,
+                enablePlaceholders = false
             ),
-            pagingSourceFactory = {
-                // 페이징 데이터를 가져오는 PagingSource를 생성하는 람다 함수
-                GithubReposPagingSource(
-                    api = api, // GitHub API 호출을 위한 Retrofit 서비스 인터페이스
-                    query = query, // 검색 키워드 전달
-                    sort = sort, // 정렬 기준 전달
-                    githubRepoDao = githubRepoDao, // 로컬 데이터베이스 (Room) 접근 객체
-                    preferenceManager = preferenceManager // 사용자 선호도 설정을 관리하는 객체
-                )
-            }
-        ).flow
+            pagingSourceFactory = { githubRepoDao.getPagingSource() }
+        ).flow.map { pagingData ->
+            pagingData.map { it.toModel() }
+        }
+    }
+
+    override fun getAllReposFlow(): Flow<List<GithubRepoModel>> {
+        return githubRepoDao.getAllReposFlow().map { entities ->
+            entities.map { it.toModel() }
+        }
     }
 }

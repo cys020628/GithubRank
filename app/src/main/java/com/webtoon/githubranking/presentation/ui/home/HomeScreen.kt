@@ -19,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +41,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val githubRepoList = homeViewModel.githubRepo.collectAsLazyPagingItems()
+    val repoList = homeViewModel.repoPagingFlow.collectAsLazyPagingItems()
+    val allRepos by homeViewModel.allReposFlow.collectAsState()
 
     /**
      * @param LaunchedEffect Jetpack Compose에서 특정 키 값이 변경될 때 코드를 실행하는 Composable 함수
@@ -51,11 +54,7 @@ fun HomeScreen(
      * LaunchedEffect(navBackStackEntry)	네비게이션 상태가 변경될 때마다 실행
      */
     LaunchedEffect(Unit) {
-        // 하트가 제일 많은 순으로 업데이트
-        homeViewModel.getGithubRepoList(
-            "stars:>0",
-            "stars"
-        )
+
     }
 
     Scaffold(
@@ -78,13 +77,12 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(), // 전체 화면을 차지하도록 설정
                 contentPadding = PaddingValues(16.dp) // 리스트의 전체 padding 값을 16.dp 로 설정
             ) {
-                items(githubRepoList.itemCount) { index ->
-                    val repoList = githubRepoList[index] // 현재 리스트의 N번째 데이터
+                items(repoList.itemCount) { index ->
+                    val repoList = repoList[index] // 현재 리스트의 N번째 데이터
                     if (repoList != null) {
                         GithubRepoItem(index + 1,repoList)  // repoList가 null 아닐때만 GithubRepoItem을 렌더링
                     }
                 }
-
             }
         }
     }
